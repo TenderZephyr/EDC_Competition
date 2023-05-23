@@ -105,5 +105,5 @@ void fFan(int i)
 //Function to open buzzer
 void fBuzzer(int i)
 {
-    buzzer = i;
+    buzzer = ~i;
 }
