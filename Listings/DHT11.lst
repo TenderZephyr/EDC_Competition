@@ -1,0 +1,160 @@
+C51 COMPILER V9.54   DHT11                                                                 05/23/2023 20:22:55 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE DHT11
+OBJECT MODULE PLACED IN .\Objects\DHT11.obj
+COMPILER INVOKED BY: D:\Keil5 C51\C51\BIN\C51.EXE DHT11.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\List
+                    -ings\DHT11.lst) TABS(2) OBJECT(.\Objects\DHT11.obj)
+
+line level    source
+
+   1          #include "DHT11.h"
+   2          #include "intrins.h"
+   3          #include "GPIO.h"
+   4          #include "oled.h"
+   5          #include "delay.h"
+   6          
+   7          sbit DHT11_DQ = P1^2;
+   8          
+   9          void dht11_gpio_OUT()
+  10          {
+  11   1        GPIO_InitTypeDef  GPIO_InitStructure;   //�ṹ����
+  12   1        GPIO_InitStructure.Pin = GPIO_Pin_2;    //ָ��Ҫ��ʼ����IO, GPIO_Pin_0 ~ GPIO_Pin_7, ��
+             -���?
+  13   1        GPIO_InitStructure.Mode = GPIO_OUT_PP;    //ָ��IO������������ʽ,GPIO_PullUp,GP
+             -IO_HighZ,GPIO_OUT_OD,GPIO_OUT_PP
+  14   1        GPIO_Inilize(GPIO_P1,&GPIO_InitStructure);   //��ʼ��
+  15   1      }
+  16          
+  17          u8 DHT11_Init(void)
+  18          {
+  19   1        
+  20   1        DHT11_DQ = 1;
+  21   1        DHT11_Rst();    
+  22   1        return DHT11_Check(); 
+  23   1      }
+  24          
+  25          
+  26          void DHT11_Rst(void)     
+  27          { 
+  28   1      
+  29   1        DHT11_DQ = 1;
+  30   1        delay10us();
+  31   1        DHT11_DQ = 0;   
+  32   1        delay_ms(25);  
+  33   1        DHT11_DQ = 1;   
+  34   1        delay30us();  
+  35   1      }
+  36          
+  37          //�ȴ�DHT11�Ļ�Ӧ
+  38          //����1:δ��⵽DHT11�Ĵ���
+  39          //����0:����
+  40          u8 DHT11_Check(void)     
+  41          {   
+  42   1        u8 retry = 0;
+  43   1      
+  44   1        while (!DHT11_DQ && retry < 100)    //�жϴӻ����� 80us �ĵ͵�ƽ��Ӧ�ź��Ƿ��
+             -����?
+  45   1        {
+  46   2          retry ++;
+  47   2          _nop_();
+  48   2        }
+  49   1        if(retry >= 100)
+  50   1        {
+  51   2          return 1;
+C51 COMPILER V9.54   DHT11                                                                 05/23/2023 20:22:55 PAGE 2   
+
+  52   2        }
+  53   1        else
+  54   1        {
+  55   2          retry = 0;
+  56   2        } 
+  57   1          while (DHT11_DQ && retry < 100)     //�жϴӻ����� 80us �ĸߵ�ƽ�Ƿ������
+             -�������������������ݽ���״̬
+  58   1        {
+  59   2          retry ++;
+  60   2          _nop_();
+  61   2        };   
+  62   1        if(retry >= 100)return 1;     
+  63   1        return 0;
+  64   1      }
+  65          
+  66          //��DHT11��ȡһ���ֽ�
+  67          //����ֵ������������
+  68          
+  69          u8 DHT11_Read_Byte(void)    
+  70          {        
+  71   1          u8 i,temp;
+  72   1        unsigned char data_byte=0; 
+  73   1        u8 retry=0;
+  74   1      
+  75   1        for(i = 0; i < 8; i ++)//接收8bit的数据 
+  76   1        { 
+  77   2      //    while(!DHT11_DQ);//等待50us的低电平开始信号结束
+  78   2          while (!DHT11_DQ&&retry<50)//等待50us的低电平开始信号结束
+  79   2          {
+  80   3            retry++;
+  81   3            _nop_();
+  82   3          };
+  83   2          retry=0; 
+  84   2          delay30us();//等待40us 
+  85   2          temp=0;//时间为26us-28us表示接收的为数据'0' 
+  86   2          if(DHT11_DQ==1) 
+  87   2            temp=1; //如果26us-28us之后还为高电平则表示接收的数据为'1' 
+  88   2      //    while(DHT11_DQ);//等待数据信号高电平'0'为26us-28us'1'为70us
+  89   2          while (DHT11_DQ&&retry<100)//等待数据信号高电平'0'为26us-28us'1'为70us
+  90   2          {
+  91   3            retry++;
+  92   3            _nop_();
+  93   3          };
+  94   2          data_byte<<=1;//接收的数据为高位在前右移 
+  95   2          data_byte|=temp; 
+  96   2        } 
+  97   1        return data_byte;
+  98   1      }
+  99          
+ 100          //��DHT11��ȡһ������
+ 101          //temp:�¶�ֵ(��Χ:0~50��)
+ 102          //humi:ʪ��ֵ(��Χ:20%~90%)
+ 103          //����ֵ��0,����;1,��ȡʧ��
+ 104          
+ 105          u8 DHT11_Read_Data(u8 *humi)      //u8 *temp,u8 *humi
+ 106          {        
+ 107   1        u8 buf[5];
+ 108   1        u8 i;
+ 109   1        DHT11_Rst();
+ 110   1        if(DHT11_Check() == 0)
+ 111   1        {
+ 112   2          for(i=0;i<5;i++)          //��ȡ40λ����
+C51 COMPILER V9.54   DHT11                                                                 05/23/2023 20:22:55 PAGE 3   
+
+ 113   2          {
+ 114   3            buf[i]=DHT11_Read_Byte();
+ 115   3          }
+ 116   2          if((buf[0]+buf[1]+buf[2]+buf[3])==buf[4])
+ 117   2          {
+ 118   3            *humi = buf[0];
+ 119   3            //*temp=buf[2];
+ 120   3          }
+ 121   2          
+ 122   2          return 1;
+ 123   2        }
+ 124   1        
+ 125   1        // else
+ 126   1        return 0;
+ 127   1        
+ 128   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    320    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      15
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

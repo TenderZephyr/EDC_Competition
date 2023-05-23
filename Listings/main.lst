@@ -1,0 +1,141 @@
+C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:22:54 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil5 C51\C51\BIN\C51.EXE main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listi
+                    -ngs\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "config.h"
+   2          #include "GPIO.h"
+   3          
+   4          //uart & iic header file
+   5          #include <uart.h>
+   6          
+   7          //imporrt module
+   8          #include "oled.h"   
+   9          #include "DS18B20.h"   
+  10          #include "MQ_2.h"
+  11          #include "DHT11.h"
+  12          #include "BH1750FVI.h"
+  13          #include "wifi_control.h"
+  14          
+  15          //define functional function
+  16          void fFan(int i);                 //turn on or close fan
+  17          void fBuzzer(int i);              //turn on or close buzzer
+  18          void init();                      //initialize module
+  19          
+  20          //define global variable
+  21          float mTemp = 25.0;                       //max temperature
+  22          int vK;                                   //MQ-2
+  23          float vTemp;                              //tenperature variable
+  24          u8 vH,temp;                                    //huminity
+  25          int vLx;                                  //light
+  26          int flagMSM = 0;                          //flag for message sending
+  27          unsigned int warn = 0;                  
+  28          
+  29          //define pin
+  30          sbit buzzer = P0^5;                       //define buzzer's pin
+  31          sbit fan = P2^5;                          //define fan's pin
+  32          
+  33          //define I/O output mode
+  34          void GPIO_Init()
+  35          {
+  36   1          GPIO_InitTypeDef GPIO_InitStructure;    //结构定义
+  37   1        GPIO_InitStructure.Pin = GPIO_Pin_2|GPIO_Pin_3;   //指定要初始化的IO, GPIO_Pin_0 ~ GPIO_Pin_7, 或�
+             -��作
+  38   1        GPIO_InitStructure.Mode = GPIO_OUT_PP;    //指定IO的输入或输出方式,GPIO_PullUp,GPIO_HighZ,GPIO_OU
+             -T_OD,GPIO_OUT_PP
+  39   1        GPIO_Inilize(GPIO_P0,&GPIO_InitStructure);  //初始化
+  40   1          
+  41   1        GPIO_InitStructure.Pin = GPIO_Pin_1;    //指定要初始化的IO, GPIO_Pin_0 ~ GPIO_Pin_7, 或操作
+  42   1        GPIO_InitStructure.Mode = GPIO_HighZ;   //指定IO的输入或输出方式,GPIO_PullUp,GPIO_HighZ,GPIO_OUT
+             -_OD,GPIO_OUT_PP
+  43   1        GPIO_Inilize(GPIO_P0,&GPIO_InitStructure);  //初始化  
+  44   1      
+  45   1          // GPIO_InitStructure.Pin = GPIO_Pin_5;   //指定要初始化的IO, GPIO_Pin_0 ~ GPIO_Pin_7, 或操作
+  46   1        // GPIO_InitStructure.Mode = GPIO_OUT_PP;   //指定IO的输入或输出方式,GPIO_PullUp,GPIO_HighZ,GPIO
+             -_OUT_OD,GPIO_OUT_PP
+  47   1        // GPIO_Inilize(GPIO_P0,&GPIO_InitStructure); //初始化  
+  48   1      }
+  49          
+  50          void main()
+C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:22:54 PAGE 2   
+
+  51          {
+  52   1          //initialize all module
+  53   1      
+  54   1          GPIO_Init();
+  55   1          init();  
+  56   1          DHT11_Init();
+  57   1          dht11_gpio_OUT();
+  58   1        OLED_Init();
+  59   1          OLED_Clear(); 
+  60   1          UartInit();
+  61   1      
+  62   1          while(1)
+  63   1          {
+  64   2              vTemp = DS18B20_ReadT();
+  65   2              vLx = Receive_Data();
+  66   2              vK = Smoke1();
+  67   2              DHT11_Read_Data(&vH);  
+  68   2      
+  69   2              OLED_Display(vTemp, vH, vLx, warn);
+  70   2              senddatas(vTemp, vH, warn, vLx);
+  71   2      
+  72   2              if((vK == 0) && (vTemp >= mTemp))
+  73   2              {
+  74   3                  if(flagMSM == 0)
+  75   3                  {
+  76   4                      flagMSM ++;
+  77   4                  }
+  78   3                  fFan(0);
+  79   3                  fBuzzer(1);
+  80   3                  warn = 1;
+  81   3              }
+  82   2              else
+  83   2              {
+  84   3                  fFan(1);
+  85   3                  fBuzzer(0);
+  86   3                  flagMSM = 0;
+  87   3                  warn = 0;
+  88   3              }  
+  89   2          }
+  90   1      }
+  91          
+  92          //Function to initialize
+  93          void init()
+  94          {
+  95   1          fFan(1);
+  96   1          fBuzzer(0);
+  97   1      }
+  98          
+  99          // Function to turn on fan
+ 100          void fFan(int i)
+ 101          {
+ 102   1          fan = i;                //i == 0, fan open, i == 1, fan close
+ 103   1      }
+ 104          
+ 105          //Function to open buzzer
+ 106          void fBuzzer(int i)
+ 107          {
+ 108   1          buzzer = ~i;
+ 109   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:22:54 PAGE 3   
+
+   CODE SIZE        =    374    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     18       2
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

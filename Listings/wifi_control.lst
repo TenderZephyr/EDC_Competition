@@ -1,0 +1,169 @@
+C51 COMPILER V9.54   WIFI_CONTROL                                                          05/23/2023 20:22:55 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE WIFI_CONTROL
+OBJECT MODULE PLACED IN .\Objects\wifi_control.obj
+COMPILER INVOKED BY: D:\Keil5 C51\C51\BIN\C51.EXE wifi_control.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT
+                    -(.\Listings\wifi_control.lst) TABS(2) OBJECT(.\Objects\wifi_control.obj)
+
+line level    source
+
+   1          #include <wifi_control.h>
+   2          #include "string.h"
+   3          #include <intrins.h>
+   4          #include "delay.h"
+   5          
+   6          /**
+   7            * @brief  uart send one byte of data
+   8            * @param  dat: Data to be sent
+   9            * @retval none
+  10            */
+  11          void send_b (unsigned char dat)
+  12          {
+  13   1        SBUF = dat;
+  14   1        while (!TI);
+  15   1        TI = 0;
+  16   1      }
+  17          
+  18          /**
+  19            * @brief  uart send one string of data
+  20            * @param  *dat��String pointer data to be sent
+  21            * @retval none
+  22            */
+  23          void send_s (unsigned char *dat)
+  24          {
+  25   1        while (*dat)
+  26   1        {
+  27   2          send_b(*dat++);
+  28   2        }
+  29   1      }
+  30          
+  31          /*
+  32            * @brief  stc15 uart initialize
+  33            * @param  none
+  34            * @retval none
+  35          */
+  36          
+  37          void uinit()        //115200bps@12.000MHz   
+  38          {   
+  39   1        SCON = 0x50;
+  40   1          //S1_USE_P36P37();    //set uart I/O
+  41   1        AUXR |= 0x40;   
+  42   1        AUXR &= 0xFE;   
+  43   1        TMOD &= 0x0F;   
+  44   1        TL1 = 0xE6;   
+  45   1        TH1 = 0xFF;   
+  46   1        ET1 = 0;    
+  47   1        TR1 = 1;    
+  48   1      }
+  49          
+  50          /**
+  51            * @brief  esp8266 initialize
+  52            * @param  none
+  53            * @retval none
+  54            */
+C51 COMPILER V9.54   WIFI_CONTROL                                                          05/23/2023 20:22:55 PAGE 2   
+
+  55          void ESP8266_ModeInit (void)
+  56          {
+  57   1        // send_string("AT+CWJAP=jia,12345678\r\n");    //connect WiFi,parameter respectively represent wifi name
+             - and password
+  58   1        // delay1000ms();
+  59   1        // delay1000ms();
+  60   1        // delay1000ms();
+  61   1        // delay1000ms();
+  62   1        // delay1000ms();
+  63   1        // connect onenet device��parameter respectively represent device ID��product ID��Authenticat
+             -ion information
+  64   1        send_s("AT+IOTCFG=1074548325,598148,123\r\n");    
+  65   1        delay1000ms();
+  66   1        //delay1000ms();  
+  67   1      }
+  68          
+  69          void wifi_control_init (void)
+  70          {
+  71   1        uinit();
+  72   1        ESP8266_ModeInit();
+  73   1        ES=1;
+  74   1      }
+  75          
+  76          /**
+  77            * @brief  send temperature data
+  78            * @param  float temp
+  79            * @retval none
+  80            */
+  81          void  senddatatemp (float temp)
+  82          {
+  83   1        char buf[50];   //create an array to hold the data
+  84   1        memset(buf, 0, sizeof(buf));    //clear cache
+  85   1        sprintf(buf, "AT+IOTSEND=1,temp,%.1f\r\n", temp);  //put the data into an array
+  86   1        send_s(buf);    //send data stream
+  87   1      }
+  88          
+  89          /**
+  90            * @brief  send humidity data
+  91            * @param  float humi
+  92            * @retval none
+  93            */
+  94          void  senddatahumi (int humi)     
+  95          {
+  96   1        char buf[50];            //create an array to hold the data
+  97   1        memset(buf, 0, sizeof(buf));    //clear cache
+  98   1        sprintf(buf, "AT+IOTSEND=1,humi,%d\r\n", humi);   //put the data into an array
+  99   1        send_s(buf);    //send data stream
+ 100   1      }
+ 101          
+ 102          /**
+ 103            * @brief  send smoke judge data
+ 104            * @param  int smoke
+ 105            * @retval none
+ 106            */
+ 107          void  senddatasmoke (int smoke)  
+ 108          {
+ 109   1        char buf[50];   //create an array to hold the data
+ 110   1        memset(buf, 0, sizeof(buf));    //clear cache
+ 111   1        sprintf(buf, "AT+IOTSEND=1,smoke,%d\r\n", smoke);   //put the data into an array
+ 112   1        send_s(buf);    //send data stream
+ 113   1      }
+ 114          
+C51 COMPILER V9.54   WIFI_CONTROL                                                          05/23/2023 20:22:55 PAGE 3   
+
+ 115          /**
+ 116            * @brief  send illumination intensity data
+ 117            * @param  float beam
+ 118            * @retval none
+ 119            */
+ 120          void  senddatabeam (int beam)  
+ 121          {
+ 122   1        char buf[50];   //create an array to hold the data
+ 123   1        memset(buf, 0, sizeof(buf));    //clear cache
+ 124   1        sprintf(buf, "AT+IOTSEND=1,beam,%d\r\n", beam);   //put the data into an array
+ 125   1        send_s(buf);    //send data stream
+ 126   1      }
+ 127          
+ 128          void senddatas(float temp, int humi, int smoke, int lx)    
+ 129          {
+ 130   1        wifi_control_init();      
+ 131   1        senddatatemp(temp);   //send temperature date to onenet
+ 132   1        delay180ms();//delay1000ms();
+ 133   1        senddatahumi(humi); //send humidity date to onenet
+ 134   1        delay180ms();//delay1000ms();
+ 135   1        senddatasmoke(smoke);   //send smoke judge date to onenet
+ 136   1        delay180ms();//delay1000ms();
+ 137   1        senddatabeam(lx); //send illumination intensity data to onenet
+ 138   1        delay180ms();//delay1000ms();   
+ 139   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    457    ----
+   CONSTANT SIZE    =    129    ----
+   XDATA SIZE       =   ----     223
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
