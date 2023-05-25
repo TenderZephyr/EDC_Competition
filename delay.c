@@ -121,5 +121,3 @@ void delay50us()		//@11.0592MHz
 	i = 135;
 	while (--i);
 }
-
-//test 3
