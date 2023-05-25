@@ -1,0 +1,12 @@
+.vscode/keil-assistant.log
+.vscode/uv4.log
+.vscode/uv4.log.lock
+Listings/Keil_Project.m51
+Listings/main.lst
+Listings/uart.lst
+Objects/Keil_Project
+Objects/Keil_Project.build_log.htm
+Objects/Keil_Project.hex
+Objects/main.obj
+Objects/uart.__i
+Objects/uart.obj
