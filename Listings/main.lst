@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:22:54 PAGE 1   
+C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:53:47 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   48   1      }
   49          
   50          void main()
-C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:22:54 PAGE 2   
+C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:53:47 PAGE 2   
 
   51          {
   52   1          //initialize all module
@@ -92,13 +92,13 @@ line level    source
   76   4                      flagMSM ++;
   77   4                  }
   78   3                  fFan(0);
-  79   3                  fBuzzer(1);
+  79   3                  fBuzzer(0);
   80   3                  warn = 1;
   81   3              }
   82   2              else
   83   2              {
   84   3                  fFan(1);
-  85   3                  fBuzzer(0);
+  85   3                  fBuzzer(1);
   86   3                  flagMSM = 0;
   87   3                  warn = 0;
   88   3              }  
@@ -121,14 +121,14 @@ line level    source
  105          //Function to open buzzer
  106          void fBuzzer(int i)
  107          {
- 108   1          buzzer = ~i;
+ 108   1          buzzer = i;
  109   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:22:54 PAGE 3   
+C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:53:47 PAGE 3   
 
-   CODE SIZE        =    374    ----
+   CODE SIZE        =    370    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     18       2
    PDATA SIZE       =   ----    ----
