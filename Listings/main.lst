@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:53:47 PAGE 1   
+C51 COMPILER V9.54   MAIN                                                                  05/25/2023 20:56:20 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   48   1      }
   49          
   50          void main()
-C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:53:47 PAGE 2   
+C51 COMPILER V9.54   MAIN                                                                  05/25/2023 20:56:20 PAGE 2   
 
   51          {
   52   1          //initialize all module
@@ -89,46 +89,47 @@ line level    source
   73   2              {
   74   3                  if(flagMSM == 0)
   75   3                  {
-  76   4                      flagMSM ++;
-  77   4                  }
-  78   3                  fFan(0);
-  79   3                  fBuzzer(0);
-  80   3                  warn = 1;
-  81   3              }
-  82   2              else
-  83   2              {
-  84   3                  fFan(1);
-  85   3                  fBuzzer(1);
-  86   3                  flagMSM = 0;
-  87   3                  warn = 0;
-  88   3              }  
-  89   2          }
-  90   1      }
-  91          
-  92          //Function to initialize
-  93          void init()
-  94          {
-  95   1          fFan(1);
-  96   1          fBuzzer(0);
-  97   1      }
-  98          
-  99          // Function to turn on fan
- 100          void fFan(int i)
- 101          {
- 102   1          fan = i;                //i == 0, fan open, i == 1, fan close
- 103   1      }
- 104          
- 105          //Function to open buzzer
- 106          void fBuzzer(int i)
- 107          {
- 108   1          buzzer = i;
- 109   1      }
+  76   4                      Send_text();
+  77   4                      flagMSM ++;
+  78   4                  }
+  79   3                  fFan(0);
+  80   3                  fBuzzer(0);
+  81   3                  warn = 1;
+  82   3              }
+  83   2              else
+  84   2              {
+  85   3                  fFan(1);
+  86   3                  fBuzzer(1);
+  87   3                  flagMSM = 0;
+  88   3                  warn = 0;
+  89   3              }  
+  90   2          }
+  91   1      }
+  92          
+  93          //Function to initialize
+  94          void init()
+  95          {
+  96   1          fFan(1);
+  97   1          fBuzzer(0);
+  98   1      }
+  99          
+ 100          // Function to turn on fan
+ 101          void fFan(int i)
+ 102          {
+ 103   1          fan = i;                //i == 0, fan open, i == 1, fan close
+ 104   1      }
+ 105          
+ 106          //Function to open buzzer
+ 107          void fBuzzer(int i)
+ 108          {
+ 109   1          buzzer = i;
+ 110   1      }
 
+
+C51 COMPILER V9.54   MAIN                                                                  05/25/2023 20:56:20 PAGE 3   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-C51 COMPILER V9.54   MAIN                                                                  05/23/2023 20:53:47 PAGE 3   
-
-   CODE SIZE        =    370    ----
+   CODE SIZE        =    373    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     18       2
    PDATA SIZE       =   ----    ----

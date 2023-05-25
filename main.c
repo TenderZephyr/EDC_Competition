@@ -73,6 +73,7 @@ void main()
         {
             if(flagMSM == 0)
             {
+                Send_text();
                 flagMSM ++;
             }
             fFan(0);
