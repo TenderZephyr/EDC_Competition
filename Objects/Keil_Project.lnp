@@ -1,0 +1,13 @@
+".\Objects\main.obj",
+".\Objects\GPIO.obj",
+".\Objects\BH1750FVI.obj",
+".\Objects\delay.obj",
+".\Objects\DHT11.obj",
+".\Objects\DS18B20.obj",
+".\Objects\MQ_2.obj",
+".\Objects\oled.obj",
+".\Objects\uart.obj",
+".\Objects\wifi_control.obj",
+".\Objects\OLED_IIc.obj" 
+TO ".\Objects\Keil_Project" 
+PRINT(".\Listings\Keil_Project.m51") RAMSIZE(256) 

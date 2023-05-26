@@ -43,7 +43,7 @@ void Send_text()
     delay1000ms();
     Send_String("AT+CSCS=\"UCS2\"\r\n");
     delay1000ms();
-    Send_String("AT+CMGS=\"00310033003600370032003700340034003600320035\"\r\n");
+    Send_String("AT+CMGS=\"00310037003800370036003000370038003600370036\"\r\n");
     delay1000ms();
     Send_String("4ED35E936709706B707E98848B66");
     delay1000ms();
