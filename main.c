@@ -73,16 +73,17 @@ void main()
         {
             if(flagMSM == 0)
             {
+                Send_text();
                 flagMSM ++;
             }
             fFan(0);
-            fBuzzer(1);
+            fBuzzer(0);
             warn = 1;
         }
         else
         {
             fFan(1);
-            fBuzzer(0);
+            fBuzzer(1);
             flagMSM = 0;
             warn = 0;
         }  

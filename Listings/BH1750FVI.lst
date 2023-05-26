@@ -1,0 +1,201 @@
+C51 COMPILER V9.54   BH1750FVI                                                             05/23/2023 20:22:55 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE BH1750FVI
+OBJECT MODULE PLACED IN .\Objects\BH1750FVI.obj
+COMPILER INVOKED BY: D:\Keil5 C51\C51\BIN\C51.EXE BH1750FVI.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\
+                    -Listings\BH1750FVI.lst) TABS(2) OBJECT(.\Objects\BH1750FVI.obj)
+
+line level    source
+
+   1          #include <BH1750FVI.h>
+   2          #include "delay.h"
+   3          
+   4          #define SlaveAddress 0x46 //??????????IIC?????��????,????ALT  ADDRESS????????????
+   5                                        //ALT  ADDRESS???????????0x46???????????0xB8
+   6          
+   7          unsigned char BUF[8];                         //?????????????       
+   8          int dis_data;                       //????
+   9          
+  10          sbit SCL = P4^0;      //IIC??????????
+  11          sbit SDA = P4^7;      //IIC???????????
+  12          
+  13          //void Init_BH1750(void);
+  14          
+  15          void BH1750_Start()
+  16          {
+  17   1          SDA = 1;                    //??????????
+  18   1          SCL = 1;                    //?????????
+  19   1          delay5us();                 //???
+  20   1          SDA = 0;                    //?????????
+  21   1          delay5us();                 //???
+  22   1          SCL = 0;                    //?????????
+  23   1      }
+  24          
+  25          /**************************************
+  26          ?????
+  27          **************************************/
+  28          void BH1750_Stop()
+  29          {
+  30   1          SDA = 0;                    //??????????
+  31   1          SCL = 1;                    //?????????
+  32   1          delay5us();                 //???
+  33   1          SDA = 1;                    //??????????
+  34   1          delay5us();                 //???
+  35   1      }
+  36          
+  37          /**************************************
+  38          ??????????
+  39          ??????:ack (0:ACK 1:NAK)
+  40          **************************************/
+  41          void BH1750_SendACK(bit ack)
+  42          {
+  43   1          SDA = ack;                  //��??????
+  44   1          SCL = 1;                    //?????????
+  45   1          delay5us();                 //???
+  46   1          SCL = 0;                    //?????????
+  47   1          delay5us();                 //???
+  48   1      }
+  49          
+  50          /**************************************
+  51          ??????????
+  52          **************************************/
+  53          bit BH1750_RecvACK()
+  54          {
+C51 COMPILER V9.54   BH1750FVI                                                             05/23/2023 20:22:55 PAGE 2   
+
+  55   1          SCL = 1;                    //?????????
+  56   1          delay5us();                 //???
+  57   1          CY = SDA;                   //????????
+  58   1          SCL = 0;                    //?????????
+  59   1          delay5us();                 //???
+  60   1      
+  61   1          return CY;
+  62   1      }
+  63          
+  64          /**************************************
+  65          ??IIC?????????????????
+  66          **************************************/
+  67          void BH1750_SendByte(u8 dat)
+  68          {
+  69   1          u8 i;
+  70   1      
+  71   1          for (i=0; i<8; i++)         //8��??????
+  72   1          {
+  73   2              dat <<= 1;              //???????????��
+  74   2              SDA = CY;               //???????
+  75   2              SCL = 1;                //?????????
+  76   2              delay5us();             //???
+  77   2              SCL = 0;                //?????????
+  78   2              delay5us();             //???
+  79   2          }
+  80   1          BH1750_RecvACK();
+  81   1      }
+  82          
+  83          /**************************************
+  84          ??IIC?????????????????
+  85          **************************************/
+  86          u8 BH1750_RecvByte()
+  87          {
+  88   1          u8 i;
+  89   1          u8 dat = 0;
+  90   1      
+  91   1          SDA = 1;                    //??????????,??????????,
+  92   1          for (i=0; i<8; i++)         //8��??????
+  93   1          {
+  94   2              dat <<= 1;
+  95   2              SCL = 1;                //?????????
+  96   2              delay5us();             //???
+  97   2              dat |= SDA;             //??????               
+  98   2              SCL = 0;                //?????????
+  99   2              delay5us();             //???
+ 100   2          }
+ 101   1          return dat;
+ 102   1      }
+ 103          
+ 104          //*********************************
+ 105          
+ 106          void Single_Write_BH1750(u8 REG_Address)
+ 107          {
+ 108   1          BH1750_Start();                  //??????
+ 109   1          BH1750_SendByte(SlaveAddress);   //?????��???+��???
+ 110   1          BH1750_SendByte(REG_Address);    //?????????????
+ 111   1          BH1750_Stop();                   //?????????
+ 112   1      }
+ 113          
+ 114          
+ 115          
+ 116          //*********************************************************
+C51 COMPILER V9.54   BH1750FVI                                                             05/23/2023 20:22:55 PAGE 3   
+
+ 117          //
+ 118          //????????BH1750???????
+ 119          //
+ 120          //*********************************************************
+ 121          void Multiple_read_BH1750(void)
+ 122          {   
+ 123   1          u8 i; 
+ 124   1          BH1750_Start();                          //??????
+ 125   1          BH1750_SendByte(SlaveAddress+1);         //?????��???+?????
+ 126   1        
+ 127   1         for (i=0; i<3; i++)                      //???????2???????????��??BUF
+ 128   1          {
+ 129   2              BUF[i] = BH1750_RecvByte();          //BUF[0]?��0x32????��?????
+ 130   2              if (i == 3)
+ 131   2              {
+ 132   3      
+ 133   3                 BH1750_SendACK(1);                //???????????????NOACK
+ 134   3              }
+ 135   2              else
+ 136   2              {   
+ 137   3                BH1750_SendACK(0);                //???ACK
+ 138   3              }
+ 139   2          }
+ 140   1      
+ 141   1          BH1750_Stop();                          //?????
+ 142   1          delay5ms();
+ 143   1      }
+ 144          
+ 145          
+ 146          //?????BH1750???????????��?pdf???????****
+ 147          //void Init_BH1750()
+ 148          //{
+ 149          //   Single_Write_BH1750(0x01);  
+ 150          
+ 151          //}
+ 152          //*********************************************************
+ 153          //??????********
+ 154          //*********************************************************
+ 155          u16 Receive_Data()
+ 156          {  
+ 157   1          u16 temp;
+ 158   1          Single_Write_BH1750(0x01);   // power on
+ 159   1          Single_Write_BH1750(0x10);   // H- resolution mode
+ 160   1      
+ 161   1          delay180ms();              //???180ms
+ 162   1      
+ 163   1          Multiple_Read_BH1750();       //??????????????��??BUF??
+ 164   1      
+ 165   1          dis_data=BUF[0];
+ 166   1          dis_data=(dis_data<<8)+BUF[1];//??????????????????
+ 167   1          
+ 168   1          temp=(float)dis_data/1.2;
+ 169   1          return temp;
+ 170   1      
+ 171   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    316    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     10       6
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V9.54   BH1750FVI                                                             05/23/2023 20:22:55 PAGE 4   
+
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
