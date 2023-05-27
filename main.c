@@ -29,8 +29,6 @@ unsigned int warn = 0;
 //define pin
 sbit buzzer = P0^3;                       //define buzzer's pin
 sbit fan = P2^5;                          //define fan's pin
-//
-//
 
 //define I/O output mode
 void GPIO_Init()
