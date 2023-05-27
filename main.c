@@ -27,7 +27,7 @@ int flagMSM = 0;                          //flag for message sending
 unsigned int warn = 0;                  
 
 //define pin
-sbit buzzer = P0^5;                       //define buzzer's pin
+sbit buzzer = P0^3;                       //define buzzer's pin
 sbit fan = P2^5;                          //define fan's pin
 
 //define I/O output mode
@@ -58,7 +58,7 @@ void main()
 	OLED_Init();
     OLED_Clear(); 
     UartInit();
-
+    
     while(1)
     {
         vTemp = DS18B20_ReadT();
@@ -70,7 +70,7 @@ void main()
         senddatas(vTemp, vH, warn, vLx);
 
         if((vK == 0) && (vTemp >= mTemp))
-        {
+        {   
             if(flagMSM == 0)
             {
                 Send_text();
