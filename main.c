@@ -1,4 +1,4 @@
-#include "config.h" //头文件修改
+#include "config.h" 
 #include "GPIO.h"
 
 //uart & iic header file
