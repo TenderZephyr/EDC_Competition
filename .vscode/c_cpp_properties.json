@@ -3,8 +3,8 @@
         {
             "name": "Target 1",
             "includePath": [
-                "D:\\Keil5 C51\\C51\\INC",
-                "c:\\Users\\86178\\Desktop\\EDC_Programme\\EDC_Competition"
+                "D:\\Keil 5\\C51\\INC",
+                "c:\\Users\\谭文宇\\Desktop\\GitHub\\EDC_Competition"
             ],
             "defines": [
                 "__C51__",

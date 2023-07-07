@@ -1,10 +1,10 @@
-C51 COMPILER V9.54   DELAY                                                                 05/25/2023 20:56:20 PAGE 1   
+C51 COMPILER V9.54   DELAY                                                                 07/07/2023 11:59:37 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE DELAY
 OBJECT MODULE PLACED IN .\Objects\delay.obj
-COMPILER INVOKED BY: D:\Keil5 C51\C51\BIN\C51.EXE delay.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\List
-                    -ings\delay.lst) TABS(2) OBJECT(.\Objects\delay.obj)
+COMPILER INVOKED BY: D:\Keil 5\C51\BIN\C51.EXE delay.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\delay.lst) TABS(2) OBJECT(.\Objects\delay.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52          
   53          void delay5ms()   //@11.0592MHz
   54          {
-C51 COMPILER V9.54   DELAY                                                                 05/25/2023 20:56:20 PAGE 2   
+C51 COMPILER V9.54   DELAY                                                                 07/07/2023 11:59:37 PAGE 2   
 
   55   1        unsigned char i, j;
   56   1      
@@ -126,7 +126,7 @@ line level    source
  114          void delay50us()    //@11.0592MHz
  115          {
  116   1        unsigned char i;
-C51 COMPILER V9.54   DELAY                                                                 05/25/2023 20:56:20 PAGE 3   
+C51 COMPILER V9.54   DELAY                                                                 07/07/2023 11:59:37 PAGE 3   
 
  117   1      
  118   1        _nop_();

@@ -1,10 +1,10 @@
-C51 COMPILER V9.54   MAIN                                                                  05/27/2023 18:19:37 PAGE 1   
+C51 COMPILER V9.54   MAIN                                                                  07/07/2023 11:59:37 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
 OBJECT MODULE PLACED IN .\Objects\main.obj
-COMPILER INVOKED BY: D:\Keil5 C51\C51\BIN\C51.EXE main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listi
-                    -ngs\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+COMPILER INVOKED BY: D:\Keil 5\C51\BIN\C51.EXE main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
 
 line level    source
 
@@ -39,7 +39,7 @@ line level    source
   29          //define pin
   30          sbit buzzer = P0^3;                       //define buzzer's pin
   31          sbit fan = P2^5;                          //define fan's pin
-  32          
+  32          //
   33          //define I/O output mode
   34          void GPIO_Init()
   35          {
@@ -62,7 +62,7 @@ line level    source
   48   1      }
   49          
   50          void main()
-C51 COMPILER V9.54   MAIN                                                                  05/27/2023 18:19:37 PAGE 2   
+C51 COMPILER V9.54   MAIN                                                                  07/07/2023 11:59:37 PAGE 2   
 
   51          {
   52   1          //initialize all module
@@ -126,7 +126,7 @@ line level    source
  110   1      }
 
 
-C51 COMPILER V9.54   MAIN                                                                  05/27/2023 18:19:37 PAGE 3   
+C51 COMPILER V9.54   MAIN                                                                  07/07/2023 11:59:37 PAGE 3   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =    373    ----
