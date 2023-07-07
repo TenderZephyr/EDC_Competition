@@ -1,4 +1,3 @@
-//修改
 #include "config.h"
 #include "GPIO.h"
 
